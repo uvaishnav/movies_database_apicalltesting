@@ -45,3 +45,23 @@ app.get("/movies/", async (request, response) => {
   });
   response.send(responseMovieListArray);
 });
+
+app.use(express.json());
+
+// API 2
+
+app.post("/movies/", async (request, response) => {
+  const movieDetails = request.body;
+  const { directorId, movieName, leadActor } = movieDetails;
+
+  const addMovieToDbQuery = `
+    insert into movie(director_id, movie_name, lead_actor)
+    values(
+        ${directorId},
+        '${movieName}',
+        '${leadActor}'
+    );`;
+
+  const dbResponse = await db.run(addMovieToDbQuery);
+  response.send("Movie Successfully Added");
+});
