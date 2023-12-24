@@ -65,3 +65,28 @@ app.post("/movies/", async (request, response) => {
   const dbResponse = await db.run(addMovieToDbQuery);
   response.send("Movie Successfully Added");
 });
+
+// API 3
+
+const convertDbObjToResponseObj2 = (dbObj) => {
+  return {
+    movieId: dbObj.movie_id,
+    directorId: dbObj.director_id,
+    movieName: dbObj.movie_name,
+    leadActor: dbObj.lead_actor,
+  };
+};
+
+app.get("/movies/:movieId/", async (request, response) => {
+  const { movieId } = request.params;
+  console.log(movieId);
+
+  const getReqMovieQuery = `
+    select * from movie where movie_id = ${movieId};`;
+  console.log("SQL Query:", getReqMovieQuery);
+
+  const reqMovie = await db.get(getReqMovieQuery);
+  console.log(reqMovie);
+
+  response.send(convertDbObjToResponseObj2(reqMovie));
+});
