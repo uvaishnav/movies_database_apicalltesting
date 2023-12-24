@@ -79,14 +79,11 @@ const convertDbObjToResponseObj2 = (dbObj) => {
 
 app.get("/movies/:movieId/", async (request, response) => {
   const { movieId } = request.params;
-  console.log(movieId);
 
   const getReqMovieQuery = `
     select * from movie where movie_id = ${movieId};`;
-  console.log("SQL Query:", getReqMovieQuery);
 
   const reqMovie = await db.get(getReqMovieQuery);
-  console.log(reqMovie);
 
   response.send(convertDbObjToResponseObj2(reqMovie));
 });
