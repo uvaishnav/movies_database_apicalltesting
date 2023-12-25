@@ -138,3 +138,25 @@ app.get("/directors/", async (request, response) => {
 
   response.send(responseArray);
 });
+
+// API 7
+
+const convertDbResponseToServerResponse = (dbObj) => {
+  return {
+    movieName: dbObj.movie_name,
+  };
+};
+app.get("/directors/:directorId/movies/", async (request, response) => {
+  const { directorId } = request.params;
+  const getLIstofMovies = `
+    select movie_name from movie where director_id =${directorId};`;
+
+  const movieNames = await db.all(getLIstofMovies);
+  const movieListReponse = movieNames.map((eachMovie) => {
+    return convertDbResponseToServerResponse(eachMovie);
+  });
+
+  response.send(movieListReponse);
+});
+
+module.exports = app;
