@@ -99,8 +99,42 @@ app.put("/movies/:movieId/", async (request, response) => {
     update movie set
     director_id = ${directorId}, 
     movie_name = '${movieName}',
-    lead_actor = '${leadActor}';`;
+    lead_actor = '${leadActor}';
+    where movie_id = ${movieId};`;
 
   const dbResponse = await db.run(updateMovieQuery);
   response.send("Movie Details Updated");
+});
+
+// API 5
+
+app.delete("/movies/:movieId/", async (request, response) => {
+  const { movieId } = request.params;
+
+  const deleteMovieQuery = `
+    delete from movie where movie_id = ${movieId};`;
+
+  const dbResponse = await db.run(deleteMovieQuery);
+
+  response.send("Movie Removed");
+});
+
+// API 6
+
+const convertDnResponse = (dbObj) => {
+  return {
+    directorId: dbObj.director_id,
+    directorName: dbObj.director_name,
+  };
+};
+app.get("/directors/", async (request, response) => {
+  const getDirectorsdQuery = `
+    select * from director;`;
+
+  const directorList = await db.all(getDirectorsdQuery);
+  const responseArray = directorList.map((eachDirector) => {
+    return convertDnResponse(eachDirector);
+  });
+
+  response.send(responseArray);
 });
