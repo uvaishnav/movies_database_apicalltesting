@@ -87,3 +87,20 @@ app.get("/movies/:movieId/", async (request, response) => {
 
   response.send(convertDbObjToResponseObj2(reqMovie));
 });
+
+// API 4
+
+app.put("/movies/:movieId/", async (request, response) => {
+  const { movieId } = request.params;
+  const movieUpdateDetails = request.body;
+  const { directorId, movieName, leadActor } = movieUpdateDetails;
+
+  const updateMovieQuery = `
+    update movie set
+    director_id = ${directorId}, 
+    movie_name = '${movieName}',
+    lead_actor = '${leadActor}';`;
+
+  const dbResponse = await db.run(updateMovieQuery);
+  response.send("Movie Details Updated");
+});
